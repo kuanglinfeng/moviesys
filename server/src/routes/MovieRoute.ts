@@ -17,6 +17,7 @@ router.get('/:id', async (request, response) => {
 
 // 根据分页信息查询多个电影
 router.get('/', async (request, response) => {
+  // @ts-ignore
   const result = await MovieService.find(request.query)
   ResponseHelper.sendPageData(result, response)
 })

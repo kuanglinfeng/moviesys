@@ -3,3 +3,39 @@
 如：/api/upload
 
 2. 客户端会用post请求，请求服务器
+
+3. 使用postman查看到的请求体（这里以上传两张图片为例）
+
+POST /api/upload HTTP/1.1
+Host: localhost:3000
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="myfile1"; filename="default.png"
+Content-Type: image/png
+
+(data)
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="myfile2"; filename="earth.jpeg"
+Content-Type: image/jpeg
+
+(data)
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+4. 服务器如何得到上传的文件
+
+使用express中间件：multer
+
+问题：
+
+- 如何设置上传的文件后缀名（根据客户端的文件后缀名决定）
+
+- 如何限制文件的上传尺寸
+
+- 如何限制文件的后缀名
+
+- 当发生错误时，如何响应给客户端；正确时，如何响应
+
+正确：响应文件的路径
+
+错误：响应错误消息
