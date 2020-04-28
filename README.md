@@ -25,7 +25,7 @@
 
 ## 数据库：mongodb
 
-数据库驱动：mongodb、mongoose
+> 数据库驱动：mongodb、mongoose
 
 以上两种都对TS的支持不是太好
 
