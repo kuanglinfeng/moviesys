@@ -8,7 +8,7 @@ import {
   SaveMoviesAction,
   SetConditionAction,
   SetLoadingAction
-} from '../actions/MovieAction'
+} from '../actions/MovieActions'
 import { Reducer } from 'react'
 
 // 让ISearchCondition接口里的类型都变为必填的

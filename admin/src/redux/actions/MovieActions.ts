@@ -95,7 +95,6 @@ function fetchMovies(condition: ISearchCondition): ThunkAction<Promise<void>, IR
     // 2. 设置条件
     dispatch(setConditionAction(condition))
     // 3. 获取服务器数据
-    console.log(getState())
     const enhanceCondition = getState().movie.condition
     const data = await MovieService.getMovies(enhanceCondition)
     // 4. 更改仓库的数据
