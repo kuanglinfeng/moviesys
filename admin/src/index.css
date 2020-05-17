@@ -26,3 +26,8 @@ code {
 .main {
   padding: 1em;
 }
+
+.tablePoster {
+  width: 50px;
+  border: 2px solid #fff;
+}

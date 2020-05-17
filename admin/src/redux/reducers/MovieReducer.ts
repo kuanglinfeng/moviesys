@@ -4,7 +4,7 @@ import { IMovie } from '../../services/MovieService'
 import { ISearchCondition } from '../../services/CommonTypes'
 import {
   DeleteAction,
-  MovieActions,
+  MovieAction, MovieChangeSwitchAction,
   SaveMoviesAction,
   SetConditionAction,
   SetLoadingAction
@@ -83,8 +83,29 @@ const deleteMovie: MovieReducer<DeleteAction> = (state, action) => ({
   totalPage: Math.ceil((state.total - 1) / state.condition.limit)
 })
 
+const changeSwitch: MovieReducer<MovieChangeSwitchAction> = (state, action) => {
 
-export default (state: IMovieState = defaultState, action: MovieActions): IMovieState => {
+  // 1. 根据id找对象
+  const movie = state.data.find(movie => movie._id === action.payload.id)
+  if (!movie) return state
+  // 2. 将找到的对象克隆一份
+  const newMovie = { ...movie }
+  // 3. 设置这个新对象的isHot | isComing | isClassic
+  newMovie[action.payload.type] = action.payload.newVal
+  // 4. 将这个新对象重新放入数组，覆盖掉原来的对象
+  const newData = state.data.map(movie => {
+    if (movie._id === action.payload.id) {
+      return newMovie
+    }
+    return movie
+  })
+  return {
+    ...state,
+    data: newData
+  }
+}
+
+export default (state: IMovieState = defaultState, action: MovieAction): IMovieState => {
   switch (action.type) {
     case 'movie_save':
       return saveMovie(state, action)
@@ -94,6 +115,8 @@ export default (state: IMovieState = defaultState, action: MovieActions): IMovie
       return setCondition(state, action)
     case 'movie_delete':
       return deleteMovie(state, action)
+    case 'movie_switch':
+      return changeSwitch(state, action)
     default:
       return state
   }

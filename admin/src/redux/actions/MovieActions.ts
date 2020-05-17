@@ -73,22 +73,31 @@ export type MovieChangeSwitchAction = IAction<'movie_switch', {
   id: string
 }>
 
-function changeSwitchAction(type: SwitchType, newVal: boolean, id: string): MovieChangeSwitchAction {
+function changeSwitchAction(id: string, type: SwitchType, newVal: boolean): MovieChangeSwitchAction {
   return {
     type: 'movie_switch',
     payload: {
+      id,
       type,
-      newVal,
-      id
+      newVal
     }
   }
 }
 
+function changeSwitch(id: string, type: SwitchType, newVal: boolean): ThunkAction<Promise<void>, IRootState, any, MovieAction> {
+  return async dispatch => {
+    dispatch(changeSwitchAction(id, type, newVal))
+    await MovieService.edit(id, {
+      [type]: newVal
+    })
+  }
+}
+
 // 所有的Action情况
-export type MovieActions = SaveMoviesAction | SetLoadingAction | SetConditionAction | DeleteAction
+export type MovieAction = SaveMoviesAction | SetLoadingAction | SetConditionAction | DeleteAction | MovieChangeSwitchAction
 
 // 根据条件从服务器获取电影，注：这里的ThunkAction过于绕，不理解可用any替代
-function fetchMovies(condition: ISearchCondition): ThunkAction<Promise<void>, IRootState, any, MovieActions> {
+function fetchMovies(condition: ISearchCondition): ThunkAction<Promise<void>, IRootState, any, MovieAction> {
   return async (dispatch, getState) => {
     // 1. 设置加载状态
     dispatch(setLoadingAction(true))
@@ -104,7 +113,7 @@ function fetchMovies(condition: ISearchCondition): ThunkAction<Promise<void>, IR
   }
 }
 
-function deleteMovie(id: string): ThunkAction<Promise<void>, IRootState, any, MovieActions> {
+function deleteMovie(id: string): ThunkAction<Promise<void>, IRootState, any, MovieAction> {
   return async dispatch => {
     dispatch(setLoadingAction(true))
     // 删除数据库中的数据
@@ -122,5 +131,6 @@ export default {
   setConditionAction,
   deleteAction,
   fetchMovies,
-  deleteMovie
+  deleteMovie,
+  changeSwitch
 }
