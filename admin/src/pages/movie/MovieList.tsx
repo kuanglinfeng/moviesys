@@ -20,6 +20,25 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): IMovieTableEvents => {
     },
     onSwitchChange(id, type, newState) {
       dispatch(MovieActions.changeSwitch(id, type, newState))
+    },
+    async onDelete(id: string) {
+      await dispatch(MovieActions.deleteMovie(id))
+    },
+    onChange(newPage: number) {
+      dispatch(MovieActions.fetchMovies({
+        page: newPage
+      }))
+    },
+    onKeyChange(key: string) {
+      dispatch(MovieActions.setConditionAction({
+        key
+      }))
+    },
+    onSearch() {
+      // 搜索时回到第一页
+      dispatch(MovieActions.fetchMovies({
+        page: 1
+      }))
     }
   }
 }
