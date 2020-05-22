@@ -35,7 +35,7 @@ const upload = multer({
       cb(new Error('文件类型不正确'))
     }
   }
-}).single('imgfile')
+}).single('imageFile')
 
 router.post('/', (request, response) => {
   // @ts-ignore
