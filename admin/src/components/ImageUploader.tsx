@@ -5,8 +5,11 @@ import { UploadFile } from 'antd/es/upload/interface'
 import { IResponseData, IResponseError } from '../services/CommonTypes'
 
 interface IImageUploaderProps {
-  url?: string
-  onUrlChange?: (url: string) => void
+  /**
+   * value is url string
+   */
+  value?: string
+  onChange?: (value: string) => void
 }
 
 interface IImageUploadState {
@@ -20,7 +23,7 @@ export default class extends React.Component<IImageUploaderProps, IImageUploadSt
   }
 
   private getUploadContent() {
-    if (this.props.url) return null
+    if (this.props.value) return null
     return (
       <div>
         <PlusOutlined />
@@ -32,12 +35,12 @@ export default class extends React.Component<IImageUploaderProps, IImageUploadSt
   }
 
   private getFileList(): UploadFile[] {
-    if (this.props.url) {
+    if (this.props.value) {
       return [
         {
-          uid: this.props.url,
-          name: this.props.url,
-          url: this.props.url
+          uid: this.props.value,
+          name: this.props.value,
+          url: this.props.value
         }
       ]
     }
@@ -55,8 +58,8 @@ export default class extends React.Component<IImageUploaderProps, IImageUploadSt
     if (response.error) {
       message.error('上传失败！')
     } else {
-      if (this.props.onUrlChange) {
-        this.props.onUrlChange(response.data!)
+      if (this.props.onChange) {
+        this.props.onChange(response.data!)
       }
     }
   }
@@ -73,7 +76,7 @@ export default class extends React.Component<IImageUploaderProps, IImageUploadSt
           fileList={this.getFileList()}
           customRequest={this.handleUploadRequest.bind(this)}
           onRemove={() => {
-            this.props.onUrlChange && this.props.onUrlChange('')
+            this.props.onChange && this.props.onChange('')
           }}
           onPreview={() => {
             this.setState({isModalSeen: true})
@@ -86,7 +89,7 @@ export default class extends React.Component<IImageUploaderProps, IImageUploadSt
           footer={null}
           onCancel={() => this.setState({isModalSeen: false})}
         >
-          <img alt="example" style={{ width: '100%' }} src={this.props.url} />
+          <img alt="example" style={{ width: '100%' }} src={this.props.value} />
         </Modal>
       </div>
     )

@@ -15,20 +15,20 @@ const formItemLayout = {
   }
 }
 
-const AllAreas: {label: string, value: string}[] = [
-  {label: '中国大陆', value: '中国大陆'},
-  {label: '美国', value: '美国'},
-  {label: '中国台湾', value: '中国台湾'},
-  {label: '中国香港', value: '中国香港'}
+const AllAreas: { label: string, value: string }[] = [
+  { label: '中国大陆', value: '中国大陆' },
+  { label: '美国', value: '美国' },
+  { label: '中国台湾', value: '中国台湾' },
+  { label: '中国香港', value: '中国香港' }
 ]
 
 const AreaGroups = Checkbox.Group
 
-const AllTypes: {label: string, value: string}[] = [
-  {label: '喜剧', value: '喜剧'},
-  {label: '动作', value: '动作'},
-  {label: '爱情', value: '爱情'},
-  {label: '剧情', value: '剧情'}
+const AllTypes: { label: string, value: string }[] = [
+  { label: '喜剧', value: '喜剧' },
+  { label: '动作', value: '动作' },
+  { label: '爱情', value: '爱情' },
+  { label: '剧情', value: '剧情' }
 ]
 
 const TypeGroups = Checkbox.Group
@@ -36,6 +36,7 @@ const TypeGroups = Checkbox.Group
 interface IFormProp extends RouteComponentProps<any> {
   // string is Error Message
   onSubmit: (movie: IMovie) => Promise<string>
+  movie?: IMovie
 }
 
 class MovieForm extends React.Component<IFormProp, any> {
@@ -47,6 +48,15 @@ class MovieForm extends React.Component<IFormProp, any> {
     isHot: false,
     isClassic: false,
     isComing: false
+  }
+
+  constructor(props: any) {
+    super(props)
+    console.log(this.props.movie)
+  }
+
+  componentDidMount() {
+    console.log(this.props.movie)
   }
 
   private onFinish = async (values: object) => {
@@ -65,28 +75,41 @@ class MovieForm extends React.Component<IFormProp, any> {
     this.formRef.current!.setFieldsValue({
       poster: value
     })
-    this.setState({url: value})
+    this.setState({ url: value })
   }
 
   private onSwitchChange(type: 'isHot' | 'isClassic' | 'isComing', value: boolean) {
     this.formRef.current!.setFieldsValue({
       [type]: value
     })
-    this.setState({[type]: value})
+    this.setState({ [type]: value })
   }
 
   render() {
     return (
       <Form
-        {...formItemLayout}
+        { ...formItemLayout }
         style={ { width: '700px' } }
-        ref={this.formRef}
-        onFinish={this.onFinish.bind(this)}
+        ref={ this.formRef }
+        onFinish={ this.onFinish.bind(this) }
+        fields={
+          [
+            { name: 'name', value: this.props.movie?.name },
+            {name: 'poster', value: this.props.movie?.poster},
+            { name: 'areas', value: this.props.movie?.areas },
+            { name: 'types', value: this.props.movie?.types },
+            { name: 'timeLong', value: this.props.movie?.timeLong },
+            {name: 'isHot', value: this.props.movie?.isHot},
+            {name: 'isComing', value: this.props.movie?.isComing},
+            {name: 'isClassic', value: this.props.movie?.isClassic},
+            { name: 'description', value: this.props.movie?.description },
+          ]
+        }
       >
         <Form.Item
           label='电影名称'
           name='name'
-          rules={[{required: true, message: '请填写电影名称'}]}
+          rules={ [{ required: true, message: '请填写电影名称' }] }
         >
           <Input />
         </Form.Item>
@@ -94,58 +117,50 @@ class MovieForm extends React.Component<IFormProp, any> {
           label='封面图'
           name='poster'
         >
-          <ImageUploader url={this.state.url} onUrlChange={newURL => {
-            this.onUploadPoster(newURL)
-          }} />
+          <ImageUploader />
         </Form.Item>
         <Form.Item
           label='上映地区'
           name='areas'
-          rules={[{required: true, message: '请选择地区'}]}
+          rules={ [{ required: true, message: '请选择地区' }] }
         >
-          <AreaGroups options={AllAreas} />
+          <AreaGroups options={ AllAreas } />
         </Form.Item>
         <Form.Item
           label='类型'
           name='types'
-          rules={[{required: true, message: '请选择类型'}]}
+          rules={ [{ required: true, message: '请选择类型' }] }
 
         >
-          <TypeGroups options={AllTypes} />
+          <TypeGroups options={ AllTypes } />
         </Form.Item>
         <Form.Item
           label='时长(分钟)'
           name='timeLong'
-          rules={[{required: true, message: '请填写时长'}]}
+          rules={ [{ required: true, message: '请填写时长' }] }
         >
-          <InputNumber min={1} step={10}/>
+          <InputNumber min={ 1 } step={ 10 } />
         </Form.Item>
         <Form.Item
           label='正在热映'
           name='isHot'
-          initialValue={false}
+          valuePropName='checked'
         >
-          <Switch checked={this.state.isHot} onChange={value => {
-            this.onSwitchChange('isHot', value)
-          }} />
+          <Switch />
         </Form.Item>
         <Form.Item
           label='即将上映'
           name='isComing'
-          initialValue={false}
+          valuePropName='checked'
         >
-          <Switch checked={this.state.isComing} onChange={value => {
-            this.onSwitchChange('isComing', value)
-          }} />
+          <Switch />
         </Form.Item>
         <Form.Item
           label='经典影片'
           name='isClassic'
-          initialValue={false}
+          valuePropName='checked'
         >
-          <Switch checked={this.state.isClassic} onChange={value => {
-            this.onSwitchChange('isClassic', value)
-          }} />
+          <Switch />
         </Form.Item>
         <Form.Item
           label='描述'
@@ -154,8 +169,8 @@ class MovieForm extends React.Component<IFormProp, any> {
           <Input.TextArea />
         </Form.Item>
         <Form.Item
-          labelCol={{span: 0}}
-          wrapperCol={{span: 19, offset: 5}}
+          labelCol={ { span: 0 } }
+          wrapperCol={ { span: 19, offset: 5 } }
         >
           <Button type='primary' htmlType='submit'>提交</Button>
         </Form.Item>
