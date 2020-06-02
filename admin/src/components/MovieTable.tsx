@@ -183,6 +183,7 @@ export default class extends React.Component<IMovieState & IMovieTableEvents> {
         columns={ this.getColumns() }
         rowKey="_id"
         pagination={ this.getPageConfig() }
+        // @ts-ignore
         onChange={ this.handleChange.bind(this) }
         loading={ this.props.isLoading }
       >
